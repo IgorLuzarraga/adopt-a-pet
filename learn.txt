@@ -1,0 +1,671 @@
+Adopt a Pet!
+In this project, you will have the opportunity to practice using 
+React Router to add client-side routing to a React Application. 
+Specifically, you will be building a pet adoption website that 
+allows users to view all the adoptable pets of a particular species 
+and view the profiles of specific adoptable pets.
+
+Currently, the app renders a HomePage component that fetches and 
+displays all adoptable pets (you can view the code for this page 
+in src/pages/home/index.js). We have also built a PetDetailsPage 
+to display the details for a particular pet (src/pages/detail/index.js), 
+but this component will not render until you create a route to display it.
+
+Your tasks will be to add client-side routing to the application using 
+React Router so that:
+
+The HomePage component responds to the browser’s current URL by 
+displaying only pets of the species the user wishes to view.
+The PetDetailsPage page displays when the browser’s current URL 
+includes a specific pet’s id.
+The PetDetailsPage displays data for the correct pet based on the 
+id in the URL parameters’ values.
+When the user searches for a pet in the search bar, they are redirected 
+to the SearchPage, which uses the query parameter called name to filter 
+pets by name.
+When a user clicks a pet whose details are not available, they are 
+redirected to a PetNotFoundPage.
+From the PetNotFound page, users can click “Go Back” button that will 
+take them to page they were previously on.
+Before you get started, spend some time familiarizing yourself with the 
+project’s starting code. In particular, in the src/ folder, take note 
+of the components that you’ll be primarily working with:
+
+src/App.js (App)
+src/pages/home/index.js (HomePage)
+src/pages/detail/index.js (PetDetailsPage)
+src/pages/search/index.js (SearchPage)
+src/pages/petNotFound/index.js (PetDetailsNotFound)
+
+This lesson uses Mock Service Worker (MSW) to replicate the functionality 
+of an external API. To use MSW, you’ll want to use Google Chrome and 
+enable third-party cookies.
+
+Setup Instructions
+This project should be completed on your own computer instead of on 
+Codecademy. You can download what you’ll need by clicking the “Download” 
+button below. If you need help setting up your computer, read our article 
+about setting up a text editor for HTML/CSS development.
+
+Once you’ve downloaded the project, open up the project folder in your 
+text editor. Then, make sure to install all of the dependencies by 
+running the command below:
+
+npm install
+Finally, you can start the application locally by running the command below:
+
+npm start
+As you can see, the project has been started for you! Take a look at 
+src/App.js where you can see the Navigation and HomePage components 
+being rendered. However, while you can click on the various links in 
+the website, the application isn’t set up to handle those changing 
+routes. Now, it is up to you to add React Router to this project.
+
+Note: This application was created using Create React App.
+
+Download
+Tasks
+0/29 Complete
+Mark the tasks as complete by checking them off
+Installing React Router and adding a Router to your project.
+1.
+Install react-router-dom so that you can use React Router components 
+in your project. Use the command below:
+
+npm install --save react-router-dom@5.2.0
+Jan 2022 Update: This project is meant to be written using React Router 
+v5. React Router v6 introduces breaking changes and your project will 
+not work using these instructions if you install v6 via the default 
+command npm install react-router-dom. Check out the docs to learn more 
+about upgrading from v5 to v6.
+
+To check that you were successful, ensure that react-router-dom appears 
+in the "dependencies" object located within your project’s package.json 
+file.
+
+
+Stuck? Get a hint
+-------------------------------------------
+npm install --save react-router-dom@5.2.0
+-------------------------------------------
+
+2.
+In src/App.js, import React Router’s BrowserRouter component and alias 
+it to Router.
+
+
+Stuck? Get a hint
+-----------------------------------------------
+import {BrowserRouter as Router} from 'react-router-dom'
+----------------------------------------------
+
+3.
+In src/App.js, wrap your applications contents in a Router so that your 
+components can use React Router’s components and hooks.
+
+
+Stuck? Get a hint
+------------------------------------------------------
+Router should be the outermost component rendered by your App component.
+------------------------------------------------------
+
+Creating Your First Route
+4.
+Great job! Now that you’ve wrapped your application in a Router, you 
+are ready to start adding Routes.
+
+Before you can use the Route component, you need to add it to the list 
+of imports from react-router-dom.
+
+
+Stuck? Get a hint
+---------------------------------------------
+import { Route, Switch } from "react-router-dom"
+-----------------------------------------------
+
+5.
+First, you will create a Route that renders the HomePage component which 
+displays the list of animals available for adoption. This component 
+should appear when the path matches /:type, where :type corresponds 
+to one of the species of pets (in which case the home page should 
+render only pets of the given species).
+
+Wrap your HomePage component in a Route component. The Route should 
+have a path prop of /:type so that the home page will render the 
+species specified by the value of the URL parameter. To test that 
+your code works, try clicking on a particular species or navigating 
+to /cat or /dog.
+
+Note that if you click on the “All Pets” button, the HomePage doesn’t 
+render. We’ll be fixing that in the next task.
+
+Stuck? Get a hint
+-----------------------------------------------
+<Route  path='/:type'>  
+            <HomePage />
+          </Route>
+----------------------------------------------
+
+6.
+We still want the HomePage to render even if no type is specified in 
+the URL path. This means that type should be an optional URL parameter 
+in the path that renders the HomePage component. Make type optional 
+for the Route that renders the HomePage.
+
+Test that your code works by clicking on the “All Pets” link in the 
+navigation menu – the homepage should still display since the new 
+URL’s path (/) now matches the path of the Route that renders HomePage.
+
+
+Stuck? Get a hint
+----------------------------------------
+ <Route  path='/:type?'>  
+            <HomePage />
+          </Route>
+----------------------------------------------
+Using URL Parameters in Your React Components
+7.
+Notice that even after you navigate to /cats, the HomePage component 
+still renders all the pets (not just the cats). Your next task is 
+to fix that by building on the code we’ve provided for the HomePage 
+component. Remember, the useParams() hook can be used to give a
+ component access to the values of the URL parameters in the current URL.
+
+In src/pages/home/index.js, import the useParams() hook from react-router-dom.
+
+
+Stuck? Get a hint
+---------------------------------------------------
+import { useParams } from 'react-router-dom';
+-----------------------------------------------------
+8.
+Within the HomePage component, we’ve defined a variable, type, and 
+set it equal to an empty string. Replace this variable declaration and 
+instead use useParams() to get the value of the :type URL parameter. 
+Store the value in a variable called type.
+
+To test that your code works, click on one of the species links – you 
+should now see only pets of that type!
+
+How does this work? Inside the useEffect() hook, we’ve passed type 
+to our API’s getPets method which fetches pets of the specified type 
+to be rendered on the page. Now, this type comes from the URL parameter 
+(rather than an empty string)! 
+
+
+Stuck? Get a hint
+-------------------------------------------------
+The syntax for using destructing assignment to get the value of a 
+URL parameter :param from the object returned by a call to useParams 
+will look like:
+
+const { param } = useParams()
+
+const {type} = useParams();
+--------------------------------------------------
+Replacing a Tags with React Router Elements
+9.
+When you tested your work for the last task by clicking on one of the 
+species’ links in the navigation bar, you may have noticed a conspicuous page reload. Recall that this happens when we use native a tags (instead of React Router’s Link and NavLink components) to navigate to client-side routes.
+
+In the Navigation component (located in 
+src/components/navigation/index.js), you will improve your user’s 
+experience by replacing the a tags with React Router’s NavLink 
+component. First, you have to import NavLink from react-router-dom.
+
+
+Stuck? Get a hint
+------------------------------------------
+import { NavLink } from 'react-router-dom';
+------------------------------------------
+10.
+Next, replace the a tags in the Navigation component with NavLinks. 
+As you give these NavLink components their props, remember that NavLink 
+has a to prop instead of the a tag’s href attribute.
+
+Recall that NavLink also accepts an activeClassName property that will 
+be applied to the NavLink whose to prop matches the current URL. In 
+public/index.css, we’ve written a CSS selector for the 
+class .nav-link-active that will darken the background of any 
+element with that class name.
+
+Give your NavLink components an activeClassName prop and set it equal 
+to "nav-link-active" so that the NavLink whose to prop matches the 
+current URL will appear darker than the others.
+
+Lastly, to prevent the “All Pets” NavLink from always displaying as 
+active, add the exact prop to it. This will ensure that the NavLink 
+only renders as active when the current URL’s path is an exact match 
+(so, for example, the “All Pets” NavLink will render as active when 
+the current path is / but not when the current path is /dogs).
+
+
+Stuck? Get a hint
+-----------------------------------
+The syntax for writing a NavLink looks like:
+
+<NavLink
+  to="/path"
+  className="non-active-classname"
+  activeClassName="active-classname"
+>
+  Text
+</NavLink>
+ 
+-------------------------------------
+11.
+Notice that if you click on an individual animal’s link, the page will 
+refresh. Instead, we want to use React Router Links to skip that refresh. 
+Like NavLink, the Link component has a to property in place of the a 
+tag’s href.
+
+First, in src/pages/home/index.js, import Link from ‘react-router-dom`.
+
+Then, replace each a tag in the HomePage component with a Link 
+component with a to prop.
+
+When you complete this task, clicking on an individual pet will no 
+longer cause the page to reload. However, the details for that pet 
+won’t come up just yet. Continue on to the next task group to fix this!
+
+
+Stuck? Get a hint
+---------------------------------------------------------
+<Link 
+  key={animal.id}
+  to={`/${animal.type.toLowerCase()}/${animal.id}`}
+  className="pet"
+>
+  {showAnimalData(animal)}
+</Link> 
+---------------------------------------------------------
+
+Adding Another Route
+12.
+Great work! Clicking on an animal no longer causes a reload, however, 
+we’re not seeing the individual animal’s details either! The component 
+designed to do that is the PetDetailsPage which has already been 
+imported into src/App.js.
+
+Back in src/App.js and above the Route for the HomePage component, 
+add a Route to your Router that renders the PetDetailsPage component. 
+This Route‘s path should match URLs such as /dog/123 or /cat/456. 
+This URL path will need two URL parameters: the animal’s species 
+and the specific id. The names for these parameters should 
+be :type and :id respectively.
+
+To test that your code works, click on one of the pets listed on the
+ home page. You should be redirected to the detailed view Shuri the cat!
+
+But… maybe you didn’t click on Shuri? Continue on to the next task to 
+fix this.
+
+
+Stuck? Get a hint
+----------------------------------------------
+<Route  path='/:type/:id'>  
+  <PetDetailsPage />
+</Route>
+----------------------------------------------
+13.
+Try clicking on a few different pets and you’ll notice that you’ll 
+keep seeing the details for Shuri the cat! Take a look at the 
+PetDetailsPage component, found in src/pages/detail/index.js. 
+Here, you’ll see that we’ve hard-coded a pet id.
+
+To make this page render the details for the actual pet your user has 
+selected, use the useParams() hook to get the value of the :id URL 
+parameter in the PetDetailsPage component.
+
+To test that your code works, refresh the page. You should see the 
+details for the pet whose picture you clicked previously.
+
+Note: Only the pets with a real picture will have pet details. Later on, 
+we will route users to a default page when they click on a pet with a 
+missing picture and missing details.
+
+
+Stuck? Get a hint
+------------------------------------------
+To get the value of the :id URL parameter, you’ll need to first import 
+the useParams hook. Then, call it and use destructuring assignment 
+to get the value of the id property on the resulting object and store 
+it in a constant named id.
+
+The syntax to get the value of the URL parameters for the dynamic 
+path /:foo/:bar from the object returned by a call to useParams() 
+will look like:
+
+const { foo, bar } = useParams()
+
+const {id} = useParams()
+-----------------------------------------
+14.
+Great work! There’s one problem though: now, when you navigate 
+to /:type/:id not only will you see the detailed view for a 
+particular pet, but also the list of all pets that share the 
+current pet’s species. For example, if you go to /cat/51322435 
+then you’ll see Shuri and all of the cats.
+
+Remember, React Router’s Router will render all of the Route components 
+nested within it whose path matches that of the current URL. In this 
+case, when the PetDetailsPage component is rendered for /cats/123, 
+the HomePage component is being rendered as well. The Switch component 
+can help us with this!
+
+Return to src/App.js and import the Switch component.
+
+
+Stuck? Get a hint
+-----------------------------------------
+The Switch component can be imported from react-router-dom.
+-----------------------------------------
+
+15.
+Now, in src/App.js, wrap your Routes with a Switch component so that 
+only one Route will render at a time. Make sure to NOT wrap the Navigation 
+component inside the Switch component.
+
+Remember: Switch renders only the first Route that matches the current 
+URL, so you’ll have to think about what order you should list your routes 
+in to achieve the desired behavior.
+
+Test your code to ensure that the HomePage renders when the URL path 
+matches /:type and the PetDetailsPage renders when the URL path 
+matches /:type/:id.
+
+
+Stuck? Get a hint
+-------------------------------------------------
+You’ll want to order your routes from most to least specific. For example, in an article viewer application, you might use the following order:
+
+<Switch>
+  <Route path='/:author/:article'>
+    <ArticlePage />
+  </Route>
+  <Route path="/:author">
+    <AuthorPage />
+  </Route>
+</Switch>
+
+
+<Switch>
+  <Route  path='/:type/:id'>  
+    <PetDetailsPage />
+  </Route>
+  <Route  path='/:type?'>  
+    <HomePage />
+  </Route>
+</Switch>  
+
+------------------------------------------------
+Adding a Search Feature
+16.
+Nice job! Your next task will be to add a search feature to the pet 
+adoption website. We’ve included a search bar for you in the Navigation 
+component, but it doesn’t currently work. Your task will be to add React 
+Router to this search bar so that when a user searches for a particular 
+pet, they are redirected to a page showing all pets whose names match 
+the search query.
+
+First, you’ll need to make the search bar update the URL when the user 
+enters a new search query. We will do this imperatively using the 
+history object.
+
+Inside the Search component (src/components/search/index.js), import 
+the useHistory() hook. Then, inside the Search component, get the value 
+of the history object it returns. This will allow us to control the 
+current URL location.
+
+
+Stuck? Get a hint
+------------------------------------------
+You should import the useHistory() hook from react-router-dom.
+
+Then, at the top of your component, you should grab the history object, 
+like so:
+
+import { useHistory } from 'react-router-dom';
+ 
+const Component = () => {
+  const history = useHistory();
+  //...
+}
+-----------------------------------------
+17.
+In onSearchHandler, we’ve provided the value searchQuery for you. 
+This value will hold the query string. For example, if the user searches 
+for “fido”, the value of searchQuery will be name=fido.
+
+Below this variable, use the history object’s .push() method to 
+imperatively redirect the user to a path of the form /search?name=fido.
+
+Test out your code by searching for a value in the search bar. If you 
+search for “fido” then the URL should become /search?name=fido.
+
+
+Stuck? Get a hint
+-------------------------------------------------
+To imperatively redirect a user with history.push() and a searchQuery value, you might write something like:
+
+history.push('/search?' + searchQuery);
+-------------------------------------------------
+18.
+Now, back in src/App.js we want to render the SearchPage whenever the 
+user types into the search bar and is redirected to paths like 
+/search?name=fido.
+
+Add a Route in the Switch that renders the SearchPage component we’ve 
+imported for you. This route’s path prop should match URLs that begin
+with /search.
+
+To test that your code works, try typing something into the search bar 
+and hitting enter. The SearchPage component should be rendered.
+
+
+Stuck? Get a hint
+----------------------------------------
+Make sure to render this component above the HomePage component!
+
+In the example URL /search?name=fido, the ?name=fido portion of the 
+URL is a query parameter. Query parameters do not need to be specified 
+in the path prop since they are part of the URL’s query string, 
+not its path!
+
+Therefore, the Route component for the SearchPage should look like this:
+
+<Route path='/search'>
+  <SearchPage />
+</Route>
+------------------------------------------
+19.
+Now, the SearchPage component will be rendered whenever the user types 
+in a query into the search bar. When searching for a pet, users will 
+be redirected to URLs such as /search?name=fido, where fido is the search 
+query.
+
+In order to render the pets that match the specified query, we will need 
+to capture the query parameter value from ?name=fido. Remember, we can do 
+this with the useLocation() hook.
+
+First, in src/pages/search/index.js, import React Router’s useLocation() 
+hook.
+
+
+Stuck? Get a hint
+---------------------------------------------
+import { useLocation } from 'react-router-dom';
+---------------------------------------------
+20.
+Next, inside the SearchPage component, call useLocation and get the value 
+of the search property on the object it returns by using destructuring 
+assignment.
+
+
+Stuck? Get a hint
+---------------------------------------------
+You can use destructuring assignment to get the value by doing something like:
+
+const { nameOfProperty } = nameOfHook()
+
+const {search} = useLocation()
+---------------------------------------------
+
+21.
+Recall that the search property on the location object corresponds to the 
+current URL’s query string. To turn this query string into an object whose 
+keys correspond to query parameters and whose values correspond to those 
+parameters’ values, you should pass the search object to the 
+URLSearchParams constructor and store the result in a constant called 
+queryParams.
+
+React will issue a warning if you don’t wrap this call to 
+URLSearchParams() in React’s useMemo() hook. Therefore, your code 
+should look something like this:
+
+const queryParams = useMemo(() => { 
+  return new URLSearchParams(search)
+}, [search]);
+Without this, every time the SearchPagerenders, the call to the 
+URLSearchParams constructor will create a new object and cause 
+queryParams to change.
+
+
+Stuck? Get a hint
+-----------------------------------------
+const { search } = useLocation();
+const queryParams = useMemo(() => { 
+  return new URLSearchParams(search)
+}, [search]);
+-----------------------------------------
+22.
+Finally, in the useEffect() hook, an API call to getPets is made to 
+fetch the specified petNameToFind.
+
+Using the .get() method on the queryParams object, retrieve the 'name' 
+query parameter and assign it to petNameToFind.
+
+To test that your code works, try searching for "Shuri" and you should 
+see our favorite cat appear in the search results!
+
+
+Stuck? Get a hint
+-----------------------------------------------
+To get a property nameOfProperty from a URLSearchParams object called 
+queryParamsObject, you can use the get method like so:
+
+queryParamsObject.get('nameOfProperty')
+-----------------------------------------------
+
+Adding a PetDetailsNotFound Page
+23.
+Nice work! The next (and last) feature you’ll add to the application is a 
+PetDetailsNotFound page in the event that the user clicks on a pet whose 
+details are not yet available. Back in src/App.js this component has 
+already been imported for you.
+
+First, in src/App.js, add a Route that renders the PetDetailsNotFound 
+component when the current URL’s path is '/pet-details-not-found'.
+
+To test that your code works properly, navigate to /pet-details-not-found 
+in your URL bar.
+
+
+Stuck? Get a hint
+--------------------------------------------------------
+The syntax for writing a Route that renders SomeComponent will look like:
+
+<Route path='/path/for/route'>
+  <SomeComponent />
+</Route>
+
+<Route  path='/pet-details-not-found'>  
+  <PetDetailsNotFound />
+</Route>
+-------------------------------------------------------
+24.
+When a user clicks on a specific animal in the HomePage, the 
+PetDetailsPage (found in src/pages/detail/index.js) will be rendered. 
+If a pet’s details are not found the API call to getPetDetails(id) will 
+return an error.
+
+Your task is to conditionally redirect the user to 
+'/pet-details-not-found' whenever that happens.
+
+First, In src/pages/detail/index.js, import React Router’s Redirect 
+component.
+
+
+Stuck? Get a hint
+------------------------------------------
+import { useParams, Redirect } from 'react-router-dom';
+-------------------------------------------
+25.
+Next, update the return statement of the PetDetailsPage component to 
+render a Redirect if the getPetDetails API call returns an error. 
+The to prop for the Redirect should cause the application to render 
+the PetDetailsNotFound component.
+
+Test that your code works by clicking on ‘Dottie’—the second pet in the 
+‘All Pets’ view. Since we don’t have Dottie’s details, the API will 
+return an error and you should be redirected to the PetDetailsNotFound 
+page.
+
+
+Stuck? Get a hint
+---------------------------------
+If the API call returns an error, then error will be true. When that 
+happens, render a Redirect whose to prop equals /pet-details-not-found.
+
+{/* Redirect to /pet-details-not-found if there was an error! */}
+    <Redirect to={'/pet-details-not-found'}/>
+
+---------------------------------
+26.
+It would be nice if the user could easily navigate away from the 
+PetDetailsNotFound page to the page they were on before. We’ve provided 
+a button for this purpose, but you will need to use React Router’s 
+history object to imperatively redirect the user when it is clicked.
+
+First, in src/pages/petDetailsNotFound/index.js import React Router’s 
+useHistory() hook.
+
+
+Stuck? Get a hint
+------------------------------------------------
+import { useHistory } from 'react-router-dom';
+------------------------------------------------
+27.
+Inside the PetDetailsNotFound component, call useHistory to get access 
+to React Router’s history object.
+
+
+Stuck? Get a hint
+----------------------------------------------
+The useHistory() hook returns the history object when called.
+
+// get the history object from useHistory()
+  const history = useHistory()
+----------------------------------------------
+28.
+The onClick prop of the ‘Go Back’ button is set to the callback function 
+goBack(). Use the history object’s .goBack() method to redirect the user 
+to the previous page when the user clicks on the ‘Go Back’ button.
+
+Test out your code by clicking on a pet whose details have not been 
+loaded yet and then click on the “Go Back” button. You should be 
+redirected back to the page you just came from.
+
+
+Stuck? Get a hint
+--------------------------------------
+To use the history object’s goBack method, you’ll need to call it 
+like so: history.goBack().
+------------------------------------------
+29.
+Great work! Visit our forums to compare your project to our sample 
+solution code. You can also learn how to host your own solution on 
+GitHub so you can share it with other learners! Your solution might 
+look different from ours, and that’s okay! There are multiple ways to 
+solve these projects, and you’ll learn more by seeing others’ code.
+
